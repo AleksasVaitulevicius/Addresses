@@ -3,7 +3,7 @@
 
 paleidimui paleisti komandas:
   docker build -t addresses .
-  docker run -d -p 80:1234 addresses
+  docker run -d -p 80:1234 addresses:1
   
   servisu adresai:
   /address
