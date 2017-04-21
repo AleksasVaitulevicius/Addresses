@@ -16,7 +16,19 @@ import java.util.Map;
  * @author Aleksas
  */
 public class AddressService implements IAddressService{
+   
     Map<String, AddressModel> DB = new HashMap<>();
+    
+    public AddressService()
+    {
+        AddressModel m;
+        m = new AddressModel("1", "Lietuva", "Vilnius", "Vilniaus g.", "5", "5", "55555");
+        DB.put(m.ID, m);
+        m = new AddressModel("2", "Lietuva", "Vilnius", "Vilniaus g.", "5", "6", "555555");
+        DB.put(m.ID, m);
+        m = new AddressModel("3", "Lietuva", "Vilnius", "Didlaukio g.", "5", "7", "555555");
+        DB.put(m.ID, m);
+    }
     
     @Override
     public void add(AddressModel model){

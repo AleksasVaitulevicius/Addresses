@@ -9,7 +9,18 @@ import java.util.Map;
  * @author Aleksas
  */
 public class ResidentService implements IResidentService {
+    
     Map<String, ResidentModel> DB = new HashMap<>();
+    
+    
+    public ResidentService()
+    {
+        ResidentModel m;
+        m = new ResidentModel("1", "Petras", "Petraitis", "11111111", "1");
+        DB.put(m.ID, m);
+        m = new ResidentModel("2", "Jonas", "Jonaitis", "22222222", "2");
+        DB.put(m.ID, m);
+    }
     
     @Override
     public void add(ResidentModel model){

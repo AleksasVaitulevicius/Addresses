@@ -1,6 +1,3 @@
-/**
- * Created by liutri on 2017-03-30.
- */
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
