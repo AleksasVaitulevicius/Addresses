@@ -3,4 +3,8 @@
 
 paleidimui paleisti komandas:
   docker build -t laju2259/addresses .
-  docker run -d -p 8080:1234 laju2259/addresses:1
+  docker run -d -p 80:1234 laju2259/addresses
+  
+  servisu adresai:
+  /address
+  /resident
