@@ -62,11 +62,11 @@ public class Comments {
             } , new JsonTransformer());
 
             put("", (req, res) -> {
-                return ResidentController.Error(req, res, address);
+                return ResidentController.Error(req, res, resident);
             } , new JsonTransformer());
 
             delete("", (req, res) -> {
-                return ResidentController.Error(req, res, address);
+                return ResidentController.Error(req, res, resident);
             } , new JsonTransformer());
 
         });
