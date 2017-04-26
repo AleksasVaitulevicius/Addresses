@@ -1,5 +1,5 @@
 
-''# Adresu registras. #
+# Adresu registras. #
 ## v.1 ## 
 Paprastas adresu sarasas. Kiekvienam adresui suteikiamas ID, pagal kuri adresus galima istrinti, surasti.
 Galimos komandos:
