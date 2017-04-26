@@ -19,8 +19,10 @@ Lenteles atributai: ID, vardas, pavarde, asmens kodas, gyvenamojo namo adreso ID
 
 paleidimui naudoti komandas:
 `docker build -t laju2259:addresses .`
+
 `docker run -d -p 80:1234 laju2259:addresses`
   
 servisu adresai:
-`/address'`
-`/resident'`
+`/address`
+
+`/resident`
