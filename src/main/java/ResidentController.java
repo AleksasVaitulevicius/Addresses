@@ -1,6 +1,4 @@
 
-import java.util.ArrayList;
-import java.util.List;
 import spark.Request;
 import spark.Response;
 
@@ -11,26 +9,80 @@ public class ResidentController {
     
     private static final int HTTP_BAD_REQUEST = 400;
     private static final int HTTP_NOT_FOUND = 404;
-
+    
+    private static String validateNumerical(String value){
+        if(value == null || value.equals(""))
+            return "laukas negali buti tuscias";
+        try{
+            Integer.parseInt(value);
+        }
+        catch(Exception exp){
+            return "laukas privalo buti skaicius";
+        }
+        return null;
+    }
+    
+    private static String validateModel(ResidentModel model){
+        if(model.name == null || model.name.equals(""))
+            return "Name laukas turi buti uzpildytas";
+        if(model.surname == null || model.surname.equals(""))
+            return "Surname laukas turi buti uzpildytas";
+        String result = validateNumerical(model.IDCode);
+        if(result != null)
+            return "IDCode " + result;
+        result = validateNumerical(model.addressID);
+        if(result != null)
+            return "AddressID " + result;
+        return null;
+    }
+    
     public static Object AddModel(Request request, Response response, IResidentService service){
         ResidentModel model = JsonTransformer.fromJson(request.body(), ResidentModel.class);
-        String errors = validateResident(model);
-        if(errors.isEmpty() || errors == null)
+        String error = validateModel(model);
+        if(error == null)
         {
-            service.add(model);
-            return "OK";            
+            return service.add(model);     
         }
         else
         {
             response.status(HTTP_BAD_REQUEST);
-            return new ErrorMessage(errors);
+            return new ErrorMessage(error);
+        }
+    }
+    
+    public static Object UpdateModel(Request request, Response response, IResidentService service){
+        ResidentModel model = JsonTransformer.fromJson(request.body(), ResidentModel.class);
+        String error = validateModel(model);
+        if(error != null){
+            response.status(HTTP_BAD_REQUEST);
+            return new ErrorMessage(error);
+        }
+        try {
+            String id = request.params("id");
+            service.update(Integer.parseInt(id), model);
+            return "OK";
+        } catch (Exception e) {
+            response.status(HTTP_NOT_FOUND);
+            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
+        }
+    }
+    
+    public static Object PatchModel(Request request, Response response, IResidentService service){
+        ResidentModel model = JsonTransformer.fromJson(request.body(), ResidentModel.class);
+        try {
+            String id = request.params("id");
+            service.patch(Integer.parseInt(id), model);
+            return "OK";
+        } catch (Exception e) {
+            response.status(HTTP_NOT_FOUND);
+            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
         }
     }
     
     public static Object DeleteModel(Request request, Response response, IResidentService service){
         try {
             String id = request.params("id");
-            service.delete(id);
+            service.delete(Integer.parseInt(id));
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
@@ -41,14 +93,14 @@ public class ResidentController {
     public static Object GetModel(Request request, Response response, IResidentService service){
         try {
             String id = request.params("id");
-            ResidentModel model = service.getSingle(id);
+            ResidentModel model = service.getSingle(Integer.parseInt(id));
             if (model == null) {
-                throw new Exception("Nepavyko rasti gyventojo su tokiu id");
+                throw new Exception("Nepavyko rasti gyventojo su id: " + request.params("id"));
             }
             return model;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
         }
     }
     
@@ -56,70 +108,8 @@ public class ResidentController {
         return service.getAll();
     }
     
-    private static String validateResident(ResidentModel model)
-    {
-        String message = "";
-        if (model.ID.isEmpty() || model.ID == null)
-        {
-            message += "ID negali buti tuscias\n";
-        }
-        else
-        {
-            if(!isNumeric(model.ID))
-            {
-                message += "ID privalo buti sudarytas is skaitmenu\n";
-            }
-        }
-        if (model.name.isEmpty() || model.name == null)
-        {
-            message += "Vardas negali buti tuscias\n";
-        }
-        if (model.surname.isEmpty() || model.surname == null)
-        {
-            message += "Pavarde negali buti tuscia\n";
-        }
-        
-        if (model.IDCode.isEmpty() || model.IDCode == null)
-        {
-            message += "Asmens kodas negali buti tuscias\n";
-        }
-        else
-        {
-            if(!isNumeric(model.IDCode))
-            {
-                message += "Asmens kodas privalo buti sudarytas is skaitmenu\n";
-            }
-        }
-        
-        if (model.AddressID.isEmpty() || model.IDCode == null)
-        {
-            message += "Adresas negali buti tuscias\n";
-        }
-        else
-        {
-            if(!isNumeric(model.AddressID))
-            {
-                message += "AdresoID privalo buti sudarytas is skaitmenu\n";
-            }
-        }
-        return message;
-    }
-    
     public static Object Error(Request request, Response response, IResidentService service){
         response.status(HTTP_BAD_REQUEST);
         return new ErrorMessage("ID laukas negali buti tuscias");
-    }
-    
-    public static boolean isNumeric(String str)  
-    {  
-      try  
-      {  
-        int i = Integer.parseInt(str);  
-      }  
-      catch(NumberFormatException nfe)  
-      {  
-        return false;  
-      }  
-      return true;  
     }
 }

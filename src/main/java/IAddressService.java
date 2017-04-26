@@ -12,8 +12,10 @@ import java.util.List;
  * @author Aleksas
  */
 public interface IAddressService {
-    public void add(AddressModel model);
-    public void delete(String id);
-    public AddressModel getSingle(String id);
+    public int add(AddressModel model);
+    public void update(int id, AddressModel model);
+    public void patch(int id, AddressModel model);
+    public void delete(int id);
+    public AddressModel getSingle(int id);
     public List<AddressModel> getAll();
 }

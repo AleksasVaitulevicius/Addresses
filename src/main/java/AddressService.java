@@ -17,31 +17,56 @@ import java.util.Map;
  */
 public class AddressService implements IAddressService{
    
-    Map<String, AddressModel> DB = new HashMap<>();
+    private Map<Integer, AddressModel> DB = new HashMap<>();
     
     public AddressService()
     {
-        AddressModel m;
-        m = new AddressModel("1", "Lietuva", "Vilnius", "Vilniaus g.", "5", "5", "55555");
-        DB.put(m.ID, m);
-        m = new AddressModel("2", "Lietuva", "Vilnius", "Vilniaus g.", "5", "6", "555555");
-        DB.put(m.ID, m);
-        m = new AddressModel("3", "Lietuva", "Vilnius", "Didlaukio g.", "5", "7", "555555");
-        DB.put(m.ID, m);
+        DB.put(0, new AddressModel(0, "Lietuva", "Vilnius", "Vilniaus g.", "5", "5", "55555"));
+        DB.put(1, new AddressModel(1, "Lietuva", "Vilnius", "Vilniaus g.", "5", "6", "555555"));
+        DB.put(2, new AddressModel(2, "Lietuva", "Vilnius", "Didlaukio g.", "5", "7", "555555"));
     }
     
     @Override
-    public void add(AddressModel model){
-        DB.put(model.ID, model);
+    public int add(AddressModel model){
+        int ID = 0;
+        while(DB.containsKey(ID))
+            ID++;
+        model.ID = ID;
+        DB.put(ID, model);
+        return ID;
     }
     
     @Override
-    public void delete(String id){
+    public void update(int id, AddressModel model) {
+        model.ID = id;
+        DB.put(id, model);
+    }
+    
+    @Override
+    public void patch(int id, AddressModel model){
+        AddressModel oldModel = getSingle(id);
+        if(model.country != null)
+            oldModel.country = model.country;
+        if(model.city != null)
+            oldModel.city = model.city;
+        if(model.street != null)
+            oldModel.street = model.street;
+        if(model.buildingNr != null)
+            oldModel.buildingNr = model.buildingNr;
+        if(model.flatNr != null)
+            oldModel.flatNr = model.flatNr;
+        if(model.ZIPCode != null)
+            oldModel.ZIPCode = model.ZIPCode;
+        DB.put(id, oldModel);
+    }
+    
+    @Override
+    public void delete(int id){
         DB.remove(id);
     }
     
     @Override
-    public AddressModel getSingle(String id){
+    public AddressModel getSingle(int id){
         return DB.get(id);
     }
 

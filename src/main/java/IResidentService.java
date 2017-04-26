@@ -12,8 +12,10 @@ import java.util.List;
  * @author Aleksas
  */
 public interface IResidentService {
-    public void add(ResidentModel model);
-    public void delete(String id);
-    public ResidentModel getSingle(String id);
+    public int add(ResidentModel model);
+    public void update(int id, ResidentModel model);
+    public void patch(int id, ResidentModel model);
+    public void delete(int id);
+    public ResidentModel getSingle(int id);
     public List<ResidentModel> getAll();
 }

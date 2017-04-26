@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @author Aleksas
  */
 public class AddressModel{
-    public String ID;
+    public int ID;
     public String country;
     public String city;
     public String street;
@@ -22,7 +22,7 @@ public class AddressModel{
     public String flatNr;
     public String ZIPCode;
 
-    public AddressModel(String ID, String country, String city, String street, String buildingNr, String flatNr, String ZIPCode){
+    public AddressModel(int ID, String country, String city, String street, String buildingNr, String flatNr, String ZIPCode){
         this.ID = ID;
         this.country = country;
         this.city = city;

@@ -29,8 +29,6 @@ public class AddressController {
     }
     
     private static String validateModel(AddressModel model){
-        if(model.ID == null || model.ID.equals(""))
-            return "ID laukas turi buti uzpildytas";
         if(model.country == null || model.country.equals(""))
             return "Country laukas turi buti uzpildytas";
         if(model.city == null || model.city.equals(""))
@@ -56,14 +54,42 @@ public class AddressController {
             response.status(HTTP_BAD_REQUEST);
             return new ErrorMessage(error);
         }
-        service.add(model);
-        return "OK";
+        return service.add(model);
+    }
+    
+    public static Object UpdateModel(Request request, Response response, IAddressService service){
+        AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
+        String error = validateModel(model);
+        if(error != null){
+            response.status(HTTP_BAD_REQUEST);
+            return new ErrorMessage(error);
+        }
+        try {
+            String id = request.params("id");
+            service.update(Integer.parseInt(id), model);
+            return "OK";
+        } catch (Exception e) {
+            response.status(HTTP_NOT_FOUND);
+            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+        }
+    }
+    
+    public static Object PatchModel(Request request, Response response, IAddressService service){
+        AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
+        try {
+            String id = request.params("id");
+            service.patch(Integer.parseInt(id), model);
+            return "OK";
+        } catch (Exception e) {
+            response.status(HTTP_NOT_FOUND);
+            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+        }
     }
     
     public static Object DeleteModel(Request request, Response response, IAddressService service){
         try {
             String id = request.params("id");
-            service.delete(id);
+            service.delete(Integer.parseInt(id));
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
@@ -74,9 +100,9 @@ public class AddressController {
     public static Object GetModel(Request request, Response response, IAddressService service){
         try {
             String id = request.params("id");
-            AddressModel model = service.getSingle(id);
+            AddressModel model = service.getSingle(Integer.parseInt(id));
             if (model == null) {
-                throw new Exception("Nepavyko rasti");
+                throw new Exception("Nepavyko rasti adreso su id: " + request.params("id"));
             }
             return model;
         } catch (Exception e) {

@@ -23,9 +23,13 @@ public class Comments {
             } , new JsonTransformer());
 
             put("/:id", (req, res) -> {
-                return AddressController.AddModel(req, res, address);
+                return AddressController.UpdateModel(req, res, address);
             } , new JsonTransformer());
 
+            patch("/:id", (req, res) -> {
+                return AddressController.PatchModel(req, res, address);
+            } , new JsonTransformer());
+            
             delete("/:id", (req, res) -> {
                 return AddressController.DeleteModel(req, res, address);
             } , new JsonTransformer());
@@ -34,6 +38,10 @@ public class Comments {
                 return AddressController.Error(req, res, address);
             } , new JsonTransformer());
 
+            patch("", (req, res) -> {
+                return AddressController.AddModel(req, res, address);
+            } , new JsonTransformer());
+            
             delete("", (req, res) -> {
                 return AddressController.Error(req, res, address);
             } , new JsonTransformer());
@@ -54,7 +62,11 @@ public class Comments {
             } , new JsonTransformer());
 
             put("/:id", (req, res) -> {
-                return ResidentController.AddModel(req, res, resident);
+                return ResidentController.UpdateModel(req, res, resident);
+            } , new JsonTransformer());
+
+            patch("/:id", (req, res) -> {
+                return ResidentController.PatchModel(req, res, resident);
             } , new JsonTransformer());
 
             delete("/:id", (req, res) -> {
@@ -65,6 +77,10 @@ public class Comments {
                 return ResidentController.Error(req, res, resident);
             } , new JsonTransformer());
 
+            patch("", (req, res) -> {
+                return ResidentController.Error(req, res, resident);
+            } , new JsonTransformer());
+            
             delete("", (req, res) -> {
                 return ResidentController.Error(req, res, resident);
             } , new JsonTransformer());
