@@ -1,13 +1,14 @@
-#Adresu registras. #
-v.1 Paprastas adresu sarasas. Kiekvienam adresui suteikiamas ID, pagal kuri adresus galima istrinti, surasti.
+# Adresu registras. #
+## v.1 ## 
+Paprastas adresu sarasas. Kiekvienam adresui suteikiamas ID, pagal kuri adresus galima istrinti, surasti.
 Galimos komandos:
 * GetAll - grazina visus adresus
 * AddModel - prideda nauja modeli
 * GetModel - grazina adresa pagal nurodyta ID
 * DeleteModel - istrina adresa pagal nurodyta ID.
 Lenteles atributai: ID, Salis, Miestas, Namo numeris buto numeris, Zip kodas
-#Gyventojai. #
-v.1
+# Gyventojai. #
+## v.1 ##
 Kiekvienam gyventojui suteikiamas ID pagal kuriuos galima gyventojus surasti istrinti.
 Galimos komanods:
 * GetAll- grazina visus gyventojus
