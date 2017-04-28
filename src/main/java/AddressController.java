@@ -1,3 +1,7 @@
+
+import java.io.*;
+import java.net.*;
+import java.util.*;
 import spark.Request;
 import spark.Response;
 
@@ -6,61 +10,66 @@ import spark.Response;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author Aleksas
  */
 public class AddressController {
-    
+
     private static final int HTTP_BAD_REQUEST = 400;
     private static final int HTTP_NOT_FOUND = 404;
 
-    private static String validateNumerical(String value){
-        if(value == null || value.equals(""))
+    private static String validateNumerical(String value) {
+        if (value == null || value.equals("")) {
             return "laukas negali buti tuscias";
-        try{
-            Integer.parseInt(value);
         }
-        catch(Exception exp){
+        try {
+            Integer.parseInt(value);
+        } catch (Exception exp) {
             return "laukas privalo buti skaicius";
         }
         return null;
     }
-    
-    private static String validateModel(AddressModel model){
-        if(model.country == null || model.country.equals(""))
+
+    private static String validateModel(AddressModel model) {
+        if (model.country == null || model.country.equals("")) {
             return "Country laukas turi buti uzpildytas";
-        if(model.city == null || model.city.equals(""))
+        }
+        if (model.city == null || model.city.equals("")) {
             return "City laukas turi buti uzpildytas";
-        if(model.street == null || model.street.equals(""))
+        }
+        if (model.street == null || model.street.equals("")) {
             return "Street laukas negali buti tuscias";
+        }
         String result = validateNumerical(model.buildingNr);
-        if(result != null)
+        if (result != null) {
             return "BuildingNr " + result;
+        }
         result = validateNumerical(model.flatNr);
-        if(result != null)
+        if (result != null) {
             return "FlatNr " + result;
+        }
         result = validateNumerical(model.ZIPCode);
-        if(result != null)
+        if (result != null) {
             return "ZIPCode " + result;
+        }
         return null;
     }
-    
-    public static Object AddModel(Request request, Response response, IAddressService service){
+
+    public static Object AddModel(Request request, Response response, IAddressService service) {
         AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
         String error = validateModel(model);
-        if(error != null){
+        if (error != null) {
             response.status(HTTP_BAD_REQUEST);
             return new ErrorMessage(error);
         }
         return service.add(model);
     }
-    
-    public static Object UpdateModel(Request request, Response response, IAddressService service){
+
+    public static Object UpdateModel(Request request, Response response, IAddressService service) {
         AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
         String error = validateModel(model);
-        if(error != null){
+        if (error != null) {
             response.status(HTTP_BAD_REQUEST);
             return new ErrorMessage(error);
         }
@@ -73,8 +82,8 @@ public class AddressController {
             return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
         }
     }
-    
-    public static Object PatchModel(Request request, Response response, IAddressService service){
+
+    public static Object PatchModel(Request request, Response response, IAddressService service) {
         AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
         try {
             String id = request.params("id");
@@ -85,8 +94,8 @@ public class AddressController {
             return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
         }
     }
-    
-    public static Object DeleteModel(Request request, Response response, IAddressService service){
+
+    public static Object DeleteModel(Request request, Response response, IAddressService service) {
         try {
             String id = request.params("id");
             service.delete(Integer.parseInt(id));
@@ -96,13 +105,13 @@ public class AddressController {
             return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
         }
     }
-    
-    public static Object GetModel(Request request, Response response, IAddressService service){
+
+    public static Object GetModel(Request request, Response response, IAddressService service) {
         try {
             String id = request.params("id");
             AddressModel model = service.getSingle(Integer.parseInt(id));
             if (model == null) {
-                throw new Exception("Nepavyko rasti adreso su id: " + request.params("id"));
+                throw new Exception();
             }
             return model;
         } catch (Exception e) {
@@ -110,13 +119,66 @@ public class AddressController {
             return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
         }
     }
-    
-    public static Object GetAll(Request request, Response response, IAddressService service){
-        return service.getAll();
+
+    public static Object GetCompaniesByAddress(Request request, Response response, IAddressService service, CompaniesService compService) {
+        AddressModel model;
+        List<Company> allCompanies;
+        List<Company> companies = new ArrayList();
+        try {
+            String id = request.params("id");
+            model = service.getSingle(Integer.parseInt(id));
+            if (model == null) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            response.status(HTTP_NOT_FOUND);
+            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+        }
+        try {
+            allCompanies = compService.getAll();
+            if (allCompanies == null) {
+                throw new Exception();
+            }
+        } catch (Exception ex) {
+            return new ErrorMessage("Klaida naudojant paslauga \"companies\"");
+        }
+        for(Company company:allCompanies)
+        {
+            if(model.city.equals(company.city) &&
+               model.street.equals(company.address.substring(0, company.address.lastIndexOf(' '))) &&
+               model.buildingNr.equals(company.address.substring(company.address.lastIndexOf(' ') + 1)))
+            {
+                companies.add(company);
+            }
+        }
+        
+        return companies;
     }
     
-    public static Object Error(Request request, Response response, IAddressService service){
+    public static Object GetCompaniesByCity(Request request, Response response, IAddressService service, CompaniesService compService) {
+
+        List<Company> companies = new ArrayList();
+        try {
+            companies = compService.getAll(request.params("city"));
+        }catch(RuntimeException ex)
+        {
+            return companies;
+        }
+        catch (Exception ex) {
+            return new ErrorMessage("Klaida naudojant paslauga \"companies\"");
+        }
+        
+        return companies;
+    }
+
+    public static Object GetAll(Request request, Response response, IAddressService service) {
+        return service.getAll();
+    }
+
+    public static Object Error(Request request, Response response, IAddressService service) {
         response.status(HTTP_BAD_REQUEST);
         return new ErrorMessage("Truksta ID lauko");
     }
+
+    //residents by address
 }

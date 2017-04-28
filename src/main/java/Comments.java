@@ -1,4 +1,6 @@
+import java.io.*;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
+import java.net.*;
 import static spark.Spark.*;
 
 public class Comments {
@@ -6,8 +8,9 @@ public class Comments {
     public static void main(String[] args) {
         IAddressService address = new AddressService();
         IResidentService resident = new ResidentService();
+        CompaniesService companies = new CompaniesService();
 
-        port(1234);
+        port(7777);
 
         path("/address", () -> {
             get("", (req, res) -> {
@@ -17,7 +20,15 @@ public class Comments {
             get("/:id", (req, res) -> {
                 return AddressController.GetModel(req, res, address);
             } , new JsonTransformer());
-
+            
+            get("/:id/companies", (req, res) -> {
+                return AddressController.GetCompaniesByAddress(req, res, address, companies);
+            } , new JsonTransformer());
+            
+            get("/companiesbycity/:city", (req, res) -> {
+                return AddressController.GetCompaniesByCity(req, res, address, companies);
+            } , new JsonTransformer());
+            
             post("", (req, res) -> {
                 return AddressController.AddModel(req, res, address);
             } , new JsonTransformer());
@@ -86,7 +97,7 @@ public class Comments {
             } , new JsonTransformer());
 
         });
-
+        
         exception(Exception.class, (e, req, res) -> {
             res.status(HTTP_BAD_REQUEST);
             JsonTransformer jsonTransformer = new JsonTransformer();
@@ -96,4 +107,6 @@ public class Comments {
         after((req, rep) -> rep.type("application/json"));
 
     }
+    
+    
 }

@@ -112,4 +112,6 @@ public class ResidentController {
         response.status(HTTP_BAD_REQUEST);
         return new ErrorMessage("ID laukas negali buti tuscias");
     }
+    
+    //adress by resident, residents by city
 }

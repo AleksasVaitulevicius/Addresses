@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.Reader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.ResponseTransformer;
@@ -23,6 +24,10 @@ public class JsonTransformer implements ResponseTransformer {
 
     public static <T extends Object> T  fromJson(String json, Class<T> classe) {
         return gson.fromJson(json, classe);
+    }
+    
+    public static <T extends Object> T  fromJson(Reader reader, Class<T> classe) {
+        return gson.fromJson(reader, classe);
     }
 
     public static <T> T convert(String urlEncoded, Class<T> type, String encoding) throws Exception {
