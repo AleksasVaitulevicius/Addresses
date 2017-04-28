@@ -17,6 +17,8 @@ public class ResidentService implements IResidentService {
     {
         DB.put(1, new ResidentModel(1, "Petras", "Petraitis", "11111111", "1"));
         DB.put(2, new ResidentModel(2, "Jonas", "Jonaitis", "22222222", "2"));
+        DB.put(3, new ResidentModel(3, "Stasys", "Povilaitis", "22222222", "2"));
+        DB.put(4, new ResidentModel(4, "Darius", "Girenas", "5", "7"));
     }
     
     @Override

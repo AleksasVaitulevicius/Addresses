@@ -25,20 +25,28 @@ public class Comments {
                 return AddressController.GetCompaniesByAddress(req, res, address, companies);
             } , new JsonTransformer());
             
+            get("/:id/residents", (req, res) -> {
+                return AddressController.GetResidents(req, res, address, resident);
+            } , new JsonTransformer());
+            
             get("/companiesbycity/:city", (req, res) -> {
                 return AddressController.GetCompaniesByCity(req, res, address, companies);
             } , new JsonTransformer());
             
+            get("/residentsbycity/:city", (req, res) -> {
+                return AddressController.GetResidentsByCity(req, res, address, resident);
+            } , new JsonTransformer());
+            
             post("", (req, res) -> {
-                return AddressController.AddModel(req, res, address);
+                return ResidentController.AddModel(req, res, resident, address);
             } , new JsonTransformer());
 
             put("/:id", (req, res) -> {
-                return AddressController.UpdateModel(req, res, address);
+                return ResidentController.UpdateModel(req, res, resident, address);
             } , new JsonTransformer());
 
             patch("/:id", (req, res) -> {
-                return AddressController.PatchModel(req, res, address);
+                return ResidentController.PatchModel(req, res, resident, address);
             } , new JsonTransformer());
             
             delete("/:id", (req, res) -> {
@@ -66,6 +74,10 @@ public class Comments {
 
             get("/:id", (req, res) -> {
                 return ResidentController.GetModel(req, res, resident);
+            } , new JsonTransformer());
+            
+            get("/:id/address", (req, res) -> {
+                return ResidentController.GetModelAddress(req, res, resident, address);
             } , new JsonTransformer());
 
             post("", (req, res) -> {

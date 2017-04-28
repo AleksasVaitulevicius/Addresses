@@ -28,6 +28,7 @@ public class AddressService implements IAddressService{
         DB.put(4, new AddressModel(4, "Lietuva", "Vilnius", "Savanoriu pr.", "13", "", "555555"));
         DB.put(5, new AddressModel(5, "Lietuva", "Kaunas", "Saltuvos g.", "37", "", "555555"));
         DB.put(6, new AddressModel(6, "Lietuva", "Klaipeda", "Vytauto g.", "2", "", "555555"));
+        DB.put(7, new AddressModel(7, "Lietuva", "Kaunas", "Laisves pr.", "111", "5", "555555"));
     }
     
     @Override

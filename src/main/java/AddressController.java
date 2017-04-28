@@ -178,7 +178,46 @@ public class AddressController {
         
         return companies;
     }
-
+    
+    public static Object GetResidentsByCity(Request request, Response response, IAddressService addressService, IResidentService residentService) {
+        
+        String city = request.params("city");
+        List<ResidentModel> residents = new ArrayList();
+        for(ResidentModel res: residentService.getAll())
+        {
+            AddressModel address = addressService.getSingle(Integer.parseInt(res.addressID));
+            if (address.city.equals(city))
+            {
+                residents.add(res);
+            }
+        }
+        return residents;
+        
+    }
+    
+    public static Object GetResidents(Request request, Response response, IAddressService addressService, IResidentService residentService) {
+        AddressModel address;
+        try {
+            String id = request.params("id");
+            address = addressService.getSingle(Integer.parseInt(id));
+            if (address == null) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            response.status(HTTP_NOT_FOUND);
+            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+        }
+        List<ResidentModel> residents = new ArrayList();
+        for(ResidentModel res: residentService.getAll())
+        {
+            if (Integer.parseInt(res.addressID) == address.ID)
+            {
+                residents.add(res);
+            }
+        }
+        return residents;
+    }
+    
     public static Object GetAll(Request request, Response response, IAddressService service) {
         return service.getAll();
     }
@@ -187,6 +226,4 @@ public class AddressController {
         response.status(HTTP_BAD_REQUEST);
         return new ErrorMessage("Truksta ID lauko");
     }
-
-    //residents by address
 }
