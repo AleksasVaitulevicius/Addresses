@@ -27,14 +27,13 @@ Galimos komanods:
 * DELETE /resident/1 - istrina adresa pagal nurodyta ID(siuo atveju ID=1).
 Lenteles atributai: ID, vardas, pavarde, asmens kodas, gyvenamojo namo adreso ID
 
-paleidimui naudoti komandas:
+paleidimui is source naudoti komandas:
 
-`docker build -t laju2259:addresses:2 .`
+`docker build -t addresses .`
 
-`docker run -d -p 80:1234 laju2259:addresses:2`
+`docker run -d -p 80:7777 addresses`
+
+paleidimui is dockerhub naudoti komanda:
+
+`docker run -d -p 80:7777 laju2259/addresses:2`
   
-servisu adresai:
-
-`/address`
-
-`/resident`
