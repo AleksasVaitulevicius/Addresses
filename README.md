@@ -39,13 +39,16 @@ paleidimui is dockerhub naudoti komanda:
   
 Duomenu laukai:
 address:
+
 * country:String
 * city:String
 * street:String
 * buildingNr:int
 * flatNr:int
 * ZIPCode:int
+
 resident:
+
 * name:String
 * surname:String
 * IDCode:int
