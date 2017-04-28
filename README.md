@@ -37,16 +37,16 @@ paleidimui is dockerhub naudoti komanda:
 
 `docker run -d -p 80:7777 laju2259/addresses:2`
   
-  Duomenu laukai:
-    address:
-      * country:String
-      * city:String
-      * street:String
-      * buildingNr:int
-      * flatNr:int
-      * ZIPCode:int
-    resident:
-      * name:String
-      * surname:String
-      * IDCode:int
-      * addressID:int
+Duomenu laukai:
+address:
+* country:String
+* city:String
+* street:String
+* buildingNr:int
+* flatNr:int
+* ZIPCode:int
+resident:
+* name:String
+* surname:String
+* IDCode:int
+* addressID:int
