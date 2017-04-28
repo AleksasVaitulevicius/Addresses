@@ -10,19 +10,30 @@ public class ResidentController {
     private static final int HTTP_BAD_REQUEST = 400;
     private static final int HTTP_NOT_FOUND = 404;
     
+    private static boolean validateAddress(String address, IAddressService service){
+        try{
+            if(service.getSingle(Integer.parseInt(address)) == null)
+                return false;
+        }
+        catch(NumberFormatException exp){
+            return false;
+        }
+        return true;
+    }
+    
     private static String validateNumerical(String value){
         if(value == null || value.equals(""))
             return "laukas negali buti tuscias";
         try{
             Integer.parseInt(value);
         }
-        catch(Exception exp){
+        catch(NumberFormatException exp){
             return "laukas privalo buti skaicius";
         }
         return null;
     }
     
-    private static String validateModel(ResidentModel model){
+    private static String validateModel(ResidentModel model, IAddressService addressService){
         if(model.name == null || model.name.equals(""))
             return "Name laukas turi buti uzpildytas";
         if(model.surname == null || model.surname.equals(""))
@@ -33,12 +44,14 @@ public class ResidentController {
         result = validateNumerical(model.addressID);
         if(result != null)
             return "AddressID " + result;
+        if(!validateAddress(model.addressID, addressService))
+            return "Nera adreso su nurodytu ID:" + model.addressID;
         return null;
     }
     
-    public static Object AddModel(Request request, Response response, IResidentService service){
+    public static Object AddModel(Request request, Response response, IResidentService service, IAddressService addressService){
         ResidentModel model = JsonTransformer.fromJson(request.body(), ResidentModel.class);
-        String error = validateModel(model);
+        String error = validateModel(model, addressService);
         if(error == null)
         {
             return service.add(model);     
@@ -50,9 +63,9 @@ public class ResidentController {
         }
     }
     
-    public static Object UpdateModel(Request request, Response response, IResidentService service){
+    public static Object UpdateModel(Request request, Response response, IResidentService service, IAddressService addressService){
         ResidentModel model = JsonTransformer.fromJson(request.body(), ResidentModel.class);
-        String error = validateModel(model);
+        String error = validateModel(model, addressService);
         if(error != null){
             response.status(HTTP_BAD_REQUEST);
             return new ErrorMessage(error);
@@ -67,15 +80,21 @@ public class ResidentController {
         }
     }
     
-    public static Object PatchModel(Request request, Response response, IResidentService service){
+    public static Object PatchModel(Request request, Response response, IResidentService service, IAddressService addressService){
         ResidentModel model = JsonTransformer.fromJson(request.body(), ResidentModel.class);
+        if(!validateAddress(model.addressID, addressService)){
+            response.status(HTTP_NOT_FOUND);
+            return new ErrorMessage("Nera adreso su nurodytu ID:" + model.addressID);
+        }
+        if(model.IDCode != null && validateNumerical(model.IDCode) != null)
+            return new ErrorMessage("IDCode " + validateNumerical(model.IDCode));
         try {
             String id = request.params("id");
             service.patch(Integer.parseInt(id), model);
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
         }
     }
     
@@ -86,7 +105,7 @@ public class ResidentController {
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
         }
     }
     

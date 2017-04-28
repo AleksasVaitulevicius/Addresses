@@ -69,15 +69,15 @@ public class Comments {
             } , new JsonTransformer());
 
             post("", (req, res) -> {
-                return ResidentController.AddModel(req, res, resident);
+                return ResidentController.AddModel(req, res, resident, address);
             } , new JsonTransformer());
 
             put("/:id", (req, res) -> {
-                return ResidentController.UpdateModel(req, res, resident);
+                return ResidentController.UpdateModel(req, res, resident, address);
             } , new JsonTransformer());
 
             patch("/:id", (req, res) -> {
-                return ResidentController.PatchModel(req, res, resident);
+                return ResidentController.PatchModel(req, res, resident, address);
             } , new JsonTransformer());
 
             delete("/:id", (req, res) -> {

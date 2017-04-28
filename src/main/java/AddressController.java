@@ -85,6 +85,14 @@ public class AddressController {
 
     public static Object PatchModel(Request request, Response response, IAddressService service) {
         AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
+        
+        if(model.ZIPCode != null && validateNumerical(model.ZIPCode) != null)
+            return new ErrorMessage("ZIPCode " + validateNumerical(model.ZIPCode));
+        if(model.flatNr != null && validateNumerical(model.flatNr) != null)
+            return new ErrorMessage("FlatNr " + validateNumerical(model.flatNr));
+        if(model.buildingNr != null && validateNumerical(model.buildingNr) != null)
+            return new ErrorMessage("BuildingNr " + validateNumerical(model.buildingNr));
+        
         try {
             String id = request.params("id");
             service.patch(Integer.parseInt(id), model);
