@@ -13,7 +13,7 @@ public class CompaniesService {
 
     CompaniesService() {
         try {
-            url = new URL("http://193.219.91.103:12083");
+            url = new URL("http://localhost:8888");
         } catch (Exception e) {
         }
     }
