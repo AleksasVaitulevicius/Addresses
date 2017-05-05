@@ -1,0 +1,13 @@
+version: '1'
+
+services:
+  company:
+    image: "laju2259/addresses:2.1"
+    ports:
+      - 80:7777
+  owner:
+    image: "danmerix/company:3"
+    ports:
+      - 8888:1234
+    depends_on:
+      - company
