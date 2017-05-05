@@ -1,7 +1,5 @@
-
-
-
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -21,8 +19,9 @@ public class AddressModel{
     public String buildingNr;
     public String flatNr;
     public String ZIPCode;
+    public List<Company> companies;
 
-    public AddressModel(int ID, String country, String city, String street, String buildingNr, String flatNr, String ZIPCode){
+    public AddressModel(int ID, String country, String city, String street, String buildingNr, String flatNr, String ZIPCode, List<Company> companies){
         this.ID = ID;
         this.country = country;
         this.city = city;
@@ -30,6 +29,7 @@ public class AddressModel{
         this.buildingNr = buildingNr;
         this.flatNr = flatNr;
         this.ZIPCode = ZIPCode;
+        this.companies = companies;
     }
 
     @Override

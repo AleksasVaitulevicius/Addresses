@@ -21,14 +21,19 @@ public class AddressService implements IAddressService{
     
     public AddressService()
     {
-        DB.put(0, new AddressModel(0, "Lietuva", "Vilnius", "Vilniaus g.", "5", "5", "55555"));
-        DB.put(1, new AddressModel(1, "Lietuva", "Vilnius", "Vilniaus g.", "5", "6", "555555"));
-        DB.put(2, new AddressModel(2, "Lietuva", "Vilnius", "Didlaukio g.", "5", "7", "555555"));
-        DB.put(3, new AddressModel(3, "Lietuva", "Vilnius", "Vilniaus g.", "2", "", "555555"));
-        DB.put(4, new AddressModel(4, "Lietuva", "Vilnius", "Savanoriu pr.", "13", "", "555555"));
-        DB.put(5, new AddressModel(5, "Lietuva", "Kaunas", "Saltuvos g.", "37", "", "555555"));
-        DB.put(6, new AddressModel(6, "Lietuva", "Klaipeda", "Vytauto g.", "2", "", "555555"));
-        DB.put(7, new AddressModel(7, "Lietuva", "Kaunas", "Laisves pr.", "111", "5", "555555"));
+        DB.put(0, new AddressModel(0, "Lietuva", "Vilnius", "Vilniaus g.", "5", "5", "55555", new ArrayList<>()));
+        DB.put(1, new AddressModel(1, "Lietuva", "Vilnius", "Vilniaus g.", "5", "6", "555555", new ArrayList<>()));
+        DB.put(2, new AddressModel(2, "Lietuva", "Vilnius", "Didlaukio g.", "5", "7", "555555", new ArrayList<>()));
+        DB.put(3, new AddressModel(3, "Lietuva", "Vilnius", "Vilniaus g.", "2", "", "555555", new ArrayList<>()));
+        DB.put(4, new AddressModel(4, "Lietuva", "Vilnius", "Savanoriu pr.", "13", "", "555555", new ArrayList<>()));
+        DB.put(5, new AddressModel(5, "Lietuva", "Kaunas", "Saltuvos g.", "37", "", "555555", new ArrayList<>()));
+        DB.put(6, new AddressModel(6, "Lietuva", "Klaipeda", "Vytauto g.", "2", "", "555555", new ArrayList<>()));
+        DB.put(7, new AddressModel(7, "Lietuva", "Kaunas", "Laisves pr.", "111", "5", "555555", new ArrayList<>()));
+        DB.get(3).companies.add(new Company(1));
+        DB.get(4).companies.add(new Company(2));
+        DB.get(5).companies.add(new Company(3));
+        DB.get(6).companies.add(new Company(4));
+        DB.get(6).companies.add(new Company(5));
     }
     
     @Override

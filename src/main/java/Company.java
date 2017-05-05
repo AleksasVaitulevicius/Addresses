@@ -12,4 +12,8 @@ public class Company {
     public String address;
     public String email;
     public String phoneNumber;
+    
+    public Company(int id){
+        companyId = id;
+    }
 }

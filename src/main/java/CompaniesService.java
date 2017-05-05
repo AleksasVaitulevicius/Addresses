@@ -1,5 +1,4 @@
 
-import com.google.gson.internal.LinkedTreeMap;
 import java.io.*;
 import java.net.*;
 import java.util.*;
@@ -13,11 +12,24 @@ public class CompaniesService {
 
     CompaniesService() {
         try {
-            url = new URL("http://localhost:8888");
+            url = new URL("http://193.219.91.103:12083");
         } catch (Exception e) {
         }
     }
 
+    public Company getSingle(int id) throws Exception {
+        URL url = new URL(this.url, "/companies/" + id);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Accept", "application/json");
+
+        if (conn.getResponseCode() != 200) {
+            throw new RuntimeException("Failed : HTTP error code : "
+                    + conn.getResponseCode());
+        }
+        return JsonTransformer.fromJson(new InputStreamReader(conn.getInputStream()), Company.class);
+    }
+    
     public List<Company> getAll() throws Exception {
 
         URL url = new URL(this.url, "/companies");

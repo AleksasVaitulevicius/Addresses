@@ -122,12 +122,20 @@ public class AddressController {
         }
     }
 
-    public static Object GetModel(Request request, Response response, IAddressService service) {
+    public static Object GetModel(Request request, Response response, IAddressService service, CompaniesService compService) {
         try {
             String id = request.params("id");
             AddressModel model = service.getSingle(Integer.parseInt(id));
             if (model == null) {
                 throw new Exception();
+            }
+            int iterator;
+            for(iterator = 0; iterator != model.companies.size(); iterator++){
+                try{
+                    model.companies.set(iterator, compService.getSingle(model.companies.get(iterator).companyId));
+                }
+                catch(Exception exp){
+                }
             }
             return model;
         } catch (Exception e) {
@@ -226,8 +234,19 @@ public class AddressController {
         return residents;
     }
     
-    public static Object GetAll(Request request, Response response, IAddressService service) {
-        return service.getAll();
+    public static Object GetAll(Request request, Response response, IAddressService service, CompaniesService compService) {
+        List<AddressModel> addresses = service.getAll();
+        int iterator;
+        for(AddressModel address: addresses){
+            for(iterator = 0; iterator != address.companies.size(); iterator++){
+                try{
+                    address.companies.set(iterator, compService.getSingle(address.companies.get(iterator).companyId));
+                }
+                catch(Exception exp){
+                }
+            }
+        }
+        return addresses;
     }
 
     public static Object Error(Request request, Response response, IAddressService service) {

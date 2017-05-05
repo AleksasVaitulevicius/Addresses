@@ -1,6 +1,4 @@
-import java.io.*;
 import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
-import java.net.*;
 import static spark.Spark.*;
 
 public class Comments {
@@ -14,11 +12,11 @@ public class Comments {
 
         path("/address", () -> {
             get("", (req, res) -> {
-                    return AddressController.GetAll(req, res, address);
+                    return AddressController.GetAll(req, res, address, companies);
                 } , new JsonTransformer());
 
             get("/:id", (req, res) -> {
-                return AddressController.GetModel(req, res, address);
+                return AddressController.GetModel(req, res, address, companies);
             } , new JsonTransformer());
             
             get("/:id/companies", (req, res) -> {
