@@ -1,6 +1,6 @@
 
 # Adresu registras
-## v.2
+## v.2.1
 ## Adresai
 Paprastas adresu sarasas. Kiekvienam adresui suteikiamas ID, pagal kuri adresus galima istrinti, surasti.
 Galimos komandos:
@@ -35,7 +35,7 @@ paleidimui is source naudoti komandas:
 
 paleidimui is dockerhub naudoti komanda:
 
-`docker run -d -p 80:7777 laju2259/addresses:2`
+`docker run -d -p 80:7777 laju2259/addresses:2.1`
   
 Duomenu laukai:
 address:
