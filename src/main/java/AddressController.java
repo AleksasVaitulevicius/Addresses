@@ -33,21 +33,21 @@ public class AddressController {
 
     private static String validateModel(AddressModel model) {
         if (model.country == null || model.country.equals("")) {
-            return "Country laukas turi buti uzpildytas";
+            return "country laukas turi buti uzpildytas";
         }
         if (model.city == null || model.city.equals("")) {
-            return "City laukas turi buti uzpildytas";
+            return "city laukas turi buti uzpildytas";
         }
         if (model.street == null || model.street.equals("")) {
-            return "Street laukas negali buti tuscias";
+            return "street laukas negali buti tuscias";
         }
         String result = validateNumerical(model.buildingNr);
         if (result != null) {
-            return "BuildingNr " + result;
+            return "buildingNr " + result;
         }
         result = validateNumerical(model.flatNr);
         if (result != null) {
-            return "FlatNr " + result;
+            return "flatNr " + result;
         }
         result = validateNumerical(model.ZIPCode);
         if (result != null) {
@@ -67,7 +67,15 @@ public class AddressController {
     }
 
     public static Object UpdateModel(Request request, Response response, IAddressService service) {
-        AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
+        AddressModel model;
+        try{
+            model = JsonTransformer.fromJson(request.body(), AddressModel.class);
+        }
+        catch(Exception ex)
+        {
+            response.status(HTTP_BAD_REQUEST);
+            return new ErrorMessage(ex.getMessage());
+        }
         String error = validateModel(model);
         if (error != null) {
             response.status(HTTP_BAD_REQUEST);
@@ -79,7 +87,7 @@ public class AddressController {
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
     }
 
@@ -99,7 +107,7 @@ public class AddressController {
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
     }
 
@@ -110,7 +118,7 @@ public class AddressController {
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
     }
 
@@ -124,7 +132,7 @@ public class AddressController {
             return model;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
     }
 
@@ -140,7 +148,7 @@ public class AddressController {
             }
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
         try {
             allCompanies = compService.getAll();
@@ -205,7 +213,7 @@ public class AddressController {
             }
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
         List<ResidentModel> residents = new ArrayList();
         for(ResidentModel res: residentService.getAll())

@@ -24,15 +24,15 @@ public class ResidentController {
     
     private static String validateModel(ResidentModel model, IAddressService addressService){
         if(model.name == null || model.name.equals(""))
-            return "Name laukas turi buti uzpildytas";
+            return "name laukas turi buti uzpildytas";
         if(model.surname == null || model.surname.equals(""))
-            return "Surname laukas turi buti uzpildytas";
+            return "surname laukas turi buti uzpildytas";
         String result = validateNumerical(model.IDCode);
         if(result != null)
             return "IDCode " + result;
         result = validateNumerical(model.addressID);
         if(result != null)
-            return "AddressID " + result;
+            return "addressID " + result;
         if(!validateAddress(model.addressID, addressService))
             return "Nera adreso su nurodytu ID:" + model.addressID;
         return null;
@@ -65,7 +65,7 @@ public class ResidentController {
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti gyventojo su ID: " + request.params("id"));
         }
     }
     
@@ -83,7 +83,7 @@ public class ResidentController {
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti gyventojo su ID: " + request.params("id"));
         }
     }
     
@@ -94,7 +94,7 @@ public class ResidentController {
             return "OK";
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
     }
     
@@ -103,12 +103,12 @@ public class ResidentController {
             String id = request.params("id");
             ResidentModel model = service.getSingle(Integer.parseInt(id));
             if (model == null) {
-                throw new Exception("Nepavyko rasti gyventojo su id: " + request.params("id"));
+                throw new Exception("Nepavyko rasti gyventojo su ID: " + request.params("id"));
             }
             return model;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti gyventojo su ID: " + request.params("id"));
         }
     }
     
@@ -119,11 +119,11 @@ public class ResidentController {
             String id = request.params("id");
             resident = residents.getSingle(Integer.parseInt(id));
             if (resident == null) {
-                throw new Exception("Nepavyko rasti gyventojo su id: " + request.params("id"));
+                throw new Exception("Nepavyko rasti gyventojo su ID: " + request.params("id"));
             }
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti gyventojo su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti gyventojo su ID: " + request.params("id"));
         }
         
         try {
@@ -135,7 +135,7 @@ public class ResidentController {
             return model;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su id: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
         }
     }
     
