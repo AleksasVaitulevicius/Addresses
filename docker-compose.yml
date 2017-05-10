@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   owner:
-    image: "laju2259/addresses:2.1"
+    image: "laju2259/addresses:3"
     ports:
       - 80:7777
     depends_on:
