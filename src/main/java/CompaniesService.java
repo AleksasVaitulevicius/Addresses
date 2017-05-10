@@ -12,11 +12,30 @@ public class CompaniesService {
 
     CompaniesService() {
         try {
-            url = new URL("http://193.219.91.103:12083");
+            url = new URL("http://company:1234");
         } catch (Exception e) {
         }
     }
-
+    
+    public String addCompany(Company company) throws Exception {
+//        if(company.companyName == null)
+//            return "Company name is missing";
+        URL url = new URL(this.url, "/companies");
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("User-Agent", "Addresses");
+        conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+        conn.setRequestMethod("POST");
+        conn.setRequestProperty("Accept", "application/json");
+        conn.setDoOutput(true);
+        try (DataOutputStream writer = new DataOutputStream(conn.getOutputStream())) {
+            writer.writeBytes(JsonTransformer.gson.toJson(company));
+            writer.flush();
+        }
+        
+        return JsonTransformer.fromJson(new InputStreamReader(conn.getInputStream()), String.class);
+    }
+    
     public Company getSingle(int id) throws Exception {
         URL url = new URL(this.url, "/companies/" + id);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

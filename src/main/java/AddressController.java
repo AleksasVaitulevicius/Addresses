@@ -56,12 +56,26 @@ public class AddressController {
         return null;
     }
 
-    public static Object AddModel(Request request, Response response, IAddressService service) {
+    public static Object AddModel(Request request, Response response, IAddressService service, CompaniesService companyService) {
         AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
         String error = validateModel(model);
         if (error != null) {
             response.status(HTTP_BAD_REQUEST);
             return new ErrorMessage(error);
+        }
+        
+        String companyResponse;
+        for(Company company: model.companies){
+            try{
+                companyResponse = companyService.addCompany(company);
+            }
+            catch(Exception exp){
+                response.status(HTTP_BAD_REQUEST);
+                return new ErrorMessage(exp.getMessage());
+            }
+            if(!companyResponse.contains("Company successfully added id: "))
+                return new ErrorMessage(companyResponse);
+            company.companyId = Integer.parseInt(companyResponse.substring(31));
         }
         return service.add(model);
     }

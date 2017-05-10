@@ -36,7 +36,7 @@ public class Comments {
             } , new JsonTransformer());
             
             post("", (req, res) -> {
-                return AddressController.AddModel(req, res, address);
+                return AddressController.AddModel(req, res, address, companies);
             } , new JsonTransformer());
 
             put("/:id", (req, res) -> {
@@ -56,7 +56,7 @@ public class Comments {
             } , new JsonTransformer());
 
             patch("", (req, res) -> {
-                return AddressController.AddModel(req, res, address);
+                return AddressController.Error(req, res, address);
             } , new JsonTransformer());
             
             delete("", (req, res) -> {
