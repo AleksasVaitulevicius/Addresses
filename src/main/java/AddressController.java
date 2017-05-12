@@ -71,13 +71,13 @@ public class AddressController {
             }
             catch(Exception exp){
                 response.status(HTTP_BAD_REQUEST);
-                return new ErrorMessage(exp.getMessage());
+                return new ErrorMessage(exp.getLocalizedMessage());
             }
             if(!companyResponse.contains("Company successfully added id: "))
                 return new ErrorMessage(companyResponse);
             company.companyId = Integer.parseInt(companyResponse.substring(31));
         }
-        return service.add(model);
+        return service.add(model); 
     }
 
     public static Object UpdateModel(Request request, Response response, IAddressService service) {
@@ -149,6 +149,7 @@ public class AddressController {
                     model.companies.set(iterator, compService.getSingle(model.companies.get(iterator).companyId));
                 }
                 catch(Exception exp){
+                    model.companies.set(iterator, new Company(model.companies.get(iterator).companyId));
                 }
             }
             return model;
@@ -257,6 +258,7 @@ public class AddressController {
                     address.companies.set(iterator, compService.getSingle(address.companies.get(iterator).companyId));
                 }
                 catch(Exception exp){
+                    address.companies.set(iterator, new Company(address.companies.get(iterator).companyId));
                 }
             }
         }

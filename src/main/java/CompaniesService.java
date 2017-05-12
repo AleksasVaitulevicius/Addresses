@@ -18,10 +18,11 @@ public class CompaniesService {
     }
     
     public String addCompany(Company company) throws Exception {
-//        if(company.companyName == null)
-//            return "Company name is missing";
+        if(company.companyName == null)
+            return "Company name is missing";
         URL url = new URL(this.url, "/companies");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(2000);
         conn.setRequestMethod("POST");
         conn.setRequestProperty("User-Agent", "Addresses");
         conn.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
@@ -32,6 +33,9 @@ public class CompaniesService {
             writer.writeBytes(JsonTransformer.gson.toJson(company));
             writer.flush();
         }
+        catch(Exception exp){
+            return "Cannot connect to service company";
+        }
         
         return JsonTransformer.fromJson(new InputStreamReader(conn.getInputStream()), String.class);
     }
@@ -39,6 +43,7 @@ public class CompaniesService {
     public Company getSingle(int id) throws Exception {
         URL url = new URL(this.url, "/companies/" + id);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(2000);
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
 
@@ -53,6 +58,7 @@ public class CompaniesService {
 
         URL url = new URL(this.url, "/companies");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(2000);
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
 
@@ -69,6 +75,7 @@ public class CompaniesService {
         
         URL url = new URL(this.url, "/companies/city/" + city);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setConnectTimeout(2000);
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Accept", "application/json");
 
