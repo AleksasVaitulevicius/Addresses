@@ -46,6 +46,7 @@ address:
 * buildingNr:int
 * flatNr:int
 * ZIPCode:int
+* companies[{companyName:String}, {companyName:String}]
 
 resident:
 
