@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -12,6 +11,7 @@ import java.util.List;
  * @author Aleksas
  */
 public class AddressModel{
+    private final int server = Comments.SERVER;
     public int ID;
     public String country;
     public String city;

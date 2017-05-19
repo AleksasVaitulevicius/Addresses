@@ -1,10 +1,9 @@
 
-import java.io.Serializable;
-
 /**
  * @author Aleksas
  */
 public class ResidentModel {
+    private final int server = Comments.SERVER;
     public int ID;
     public String name;
     public String surname;

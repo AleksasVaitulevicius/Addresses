@@ -1,6 +1,4 @@
 
-import java.io.*;
-import java.net.*;
 import java.util.*;
 import spark.Request;
 import spark.Response;
@@ -61,23 +59,26 @@ public class AddressController {
         String error = validateModel(model);
         if (error != null) {
             response.status(HTTP_BAD_REQUEST);
-            return new ErrorMessage(error);
+            return new ErrorMessage(error + " SERVER:" + Comments.SERVER);
         }
         
-        String companyResponse;
+        String companyResponse, result;
+        companyResponse = "";
+        result = "{id:" + service.add(model) + ", errors:[";
         for(Company company: model.companies){
             try{
                 companyResponse = companyService.addCompany(company);
             }
             catch(Exception exp){
-                response.status(HTTP_BAD_REQUEST);
-                return new ErrorMessage(exp.getLocalizedMessage());
+                result += "{message:" + exp.getLocalizedMessage() + "},";
             }
-            if(!companyResponse.contains("Company successfully added id: "))
-                return new ErrorMessage(companyResponse);
+            if(!companyResponse.contains("Company successfully added id: ")){
+                result += "{message:" + companyResponse + "},";
+                continue;
+            }
             company.companyId = Integer.parseInt(companyResponse.substring(31));
         }
-        return service.add(model); 
+        return result.substring(0, result.length() - 2) + "], SERVER:" + Comments.SERVER + "}";
     }
 
     public static Object UpdateModel(Request request, Response response, IAddressService service) {
@@ -88,20 +89,20 @@ public class AddressController {
         catch(Exception ex)
         {
             response.status(HTTP_BAD_REQUEST);
-            return new ErrorMessage(ex.getMessage());
+            return new ErrorMessage(ex.getMessage() + ", SERVER:" + Comments.SERVER);
         }
         String error = validateModel(model);
         if (error != null) {
             response.status(HTTP_BAD_REQUEST);
-            return new ErrorMessage(error);
+            return new ErrorMessage(error + ", SERVER:" + Comments.SERVER);
         }
         try {
             String id = request.params("id");
             service.update(Integer.parseInt(id), model);
-            return "OK";
+            return "OK" + ", SERVER:" + Comments.SERVER;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id") + ", SERVER:" + Comments.SERVER);
         }
     }
 
@@ -109,19 +110,19 @@ public class AddressController {
         AddressModel model = JsonTransformer.fromJson(request.body(), AddressModel.class);
         
         if(model.ZIPCode != null && validateNumerical(model.ZIPCode) != null)
-            return new ErrorMessage("ZIPCode " + validateNumerical(model.ZIPCode));
+            return new ErrorMessage("ZIPCode " + validateNumerical(model.ZIPCode) + ", SERVER:" + Comments.SERVER);
         if(model.flatNr != null && validateNumerical(model.flatNr) != null)
-            return new ErrorMessage("FlatNr " + validateNumerical(model.flatNr));
+            return new ErrorMessage("FlatNr " + validateNumerical(model.flatNr) + ", SERVER:" + Comments.SERVER);
         if(model.buildingNr != null && validateNumerical(model.buildingNr) != null)
-            return new ErrorMessage("BuildingNr " + validateNumerical(model.buildingNr));
+            return new ErrorMessage("BuildingNr " + validateNumerical(model.buildingNr) + ", SERVER:" + Comments.SERVER);
         
         try {
             String id = request.params("id");
             service.patch(Integer.parseInt(id), model);
-            return "OK";
+            return "OK" + ", SERVER:" + Comments.SERVER;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id") + ", SERVER:" + Comments.SERVER);
         }
     }
 
@@ -129,10 +130,10 @@ public class AddressController {
         try {
             String id = request.params("id");
             service.delete(Integer.parseInt(id));
-            return "OK";
+            return "OK" + ", SERVER:" + Comments.SERVER;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id") + ", SERVER:" + Comments.SERVER);
         }
     }
 
@@ -155,7 +156,7 @@ public class AddressController {
             return model;
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id") + ", SERVER:" + Comments.SERVER);
         }
     }
 
@@ -171,7 +172,7 @@ public class AddressController {
             }
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id") + ", SERVER:" + Comments.SERVER);
         }
         try {
             allCompanies = compService.getAll();
@@ -179,7 +180,7 @@ public class AddressController {
                 throw new Exception();
             }
         } catch (Exception ex) {
-            return new ErrorMessage("Klaida naudojant paslauga \"companies\"");
+            return new ErrorMessage("Klaida naudojant paslauga \"companies\"" + ", SERVER:" + Comments.SERVER);
         }
         for(Company company:allCompanies)
         {
@@ -204,7 +205,7 @@ public class AddressController {
             return companies;
         }
         catch (Exception ex) {
-            return new ErrorMessage("Klaida naudojant paslauga \"companies\"");
+            return new ErrorMessage("Klaida naudojant paslauga \"companies\"" + ", SERVER:" + Comments.SERVER);
         }
         
         return companies;
@@ -236,7 +237,7 @@ public class AddressController {
             }
         } catch (Exception e) {
             response.status(HTTP_NOT_FOUND);
-            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id"));
+            return new ErrorMessage("Nepavyko rasti adreso su ID: " + request.params("id") + ", SERVER:" + Comments.SERVER);
         }
         List<ResidentModel> residents = new ArrayList();
         for(ResidentModel res: residentService.getAll())
@@ -267,6 +268,6 @@ public class AddressController {
 
     public static Object Error(Request request, Response response, IAddressService service) {
         response.status(HTTP_BAD_REQUEST);
-        return new ErrorMessage("Truksta ID lauko");
+        return new ErrorMessage("Truksta ID lauko" + ", SERVER:" + Comments.SERVER);
     }
 }

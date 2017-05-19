@@ -2,14 +2,26 @@ import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static spark.Spark.*;
 
 public class Comments {
+    public static int SERVER;
 
     public static void main(String[] args) {
+        int server;
+        try{
+            server = Integer.parseInt(args[0]);
+        }
+        catch(NumberFormatException ex){
+            System.out.println("server id has to be integer. Got:" + args[0]);
+            return;
+        }
+        
+        SERVER = server;
+        
         IAddressService address = new AddressService();
         IResidentService resident = new ResidentService();
         CompaniesService companies = new CompaniesService();
-
+        
         port(7777);
-
+        
         path("/address", () -> {
             get("", (req, res) -> {
                     return AddressController.GetAll(req, res, address, companies);
@@ -111,7 +123,7 @@ public class Comments {
         exception(Exception.class, (e, req, res) -> {
             res.status(HTTP_BAD_REQUEST);
             JsonTransformer jsonTransformer = new JsonTransformer();
-            res.body(jsonTransformer.render( new ErrorMessage("Gautas pranesimas nera json tipo") ));
+            res.body(jsonTransformer.render( new ErrorMessage(/*"Gautas pranesimas nera json tipo"*/e.getLocalizedMessage()) ));
         });
 
         after((req, rep) -> rep.type("application/json"));
